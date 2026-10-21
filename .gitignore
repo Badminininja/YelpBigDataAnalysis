@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Big data files and Docker outputs
+yelp_dataset/
+output/
+analysis.json

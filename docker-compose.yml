@@ -1,0 +1,22 @@
+# Two ways to run the same image. `docker compose` builds it once and reuses it.
+#
+#   docker compose run --rm analysis   -> runs the Spark SQL queries
+#   docker compose run --rm ml         -> runs the interactive ML model
+#
+# Both expect the Yelp dataset in a ./yelp_dataset folder next to this file.
+services:
+  analysis:
+    build: .
+    volumes:
+      - ./yelp_dataset:/app/yelp_dataset:ro   # your downloaded Yelp JSONs (read-only)
+      - ./output:/app/output                  # analysis.json is written here, on your machine
+    # no `command:` here, so it uses the Dockerfile's default (analysisQueries.py)
+
+  ml:
+    build: .
+    volumes:
+      - ./yelp_dataset:/app/yelp_dataset:ro
+      - ./output:/app/output
+    command: ["python", "ml_model/RandForest.py"]
+    stdin_open: true   # the ML script asks you questions...
+    tty: true          # ...so it needs an interactive terminal

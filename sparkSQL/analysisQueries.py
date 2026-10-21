@@ -5,8 +5,8 @@ import json
 from pyspark.sql.functions import col, when
 
 
-business_df = spark.read.json("yelp_dataset\yelp_academic_dataset_business.json")
-reviews_df = spark.read.json("yelp_dataset\yelp_academic_dataset_review.json")
+business_df = spark.read.json("yelp_dataset/yelp_academic_dataset_business.json")
+reviews_df = spark.read.json("yelp_dataset/yelp_academic_dataset_review.json")
 
 business_df.createOrReplaceTempView("business")
 
@@ -104,4 +104,6 @@ json_df = (ratingDistPerState.join(avgStarsPerState, "state")).join(topAttribute
 json_df.show()
 
 #generates JSON file that is used in frontend code for interactive map
-json_df.toPandas().to_json('analysis.json', orient='index')
+import os
+os.makedirs('output', exist_ok=True)
+json_df.toPandas().to_json('output/analysis.json', orient='index')
